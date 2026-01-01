@@ -94,11 +94,9 @@ packages:
   general_list:
     dependency: "direct main"
     description:
-      path: "."
-      ref: HEAD
-      resolved-ref: a947641124d6bc11640893e3984ba506fbf21590
-      url: "https://github.com/neiderGainza/GeneralList"
-    source: git
+      path: ".."
+      relative: true
+    source: path
     version: "0.0.1"
   leak_tracker:
     dependency: transitive
