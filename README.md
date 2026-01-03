@@ -1,17 +1,22 @@
 A GeneralList package.
 
 ## Features
--- Search 
--- Order
--- Filter
--- Custom Filter Widgets
+1. Search 
+2. Order
+3. Filter (with predefined FilterWidgets or your Custom Ones)
+4. Pagination (still not working)
 
 ## Getting started
 This project depends on flutter_bloc and is mean to be use with drift ( it uses an stream from the repository to update the list)
 
-## Usage
 
-SearchOrderFilterPaginatedList<int>(
+## Usage
+### Add the dependency:
+general_list:
+    git: https://github.com/neiderGainza/GeneralList
+
+### Usage:
+GeneralList<int>(
  
     itemBuilder: (context, value) => Card(child: Padding(
         padding: const EdgeInsets.all(8.0),

@@ -3,12 +3,14 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:general_list/filter_widget/filter_widget.dart';
 import 'package:general_list/utils.dart';
 import 'package:general_list/view_model/list_bloc.dart';
+import 'package:general_list/view_model/list_state.dart';
 import 'package:general_list/widget/filter_bar.dart';
 import 'package:general_list/widget/filter_button.dart';
+import 'package:general_list/widget/header.dart';
 import 'package:general_list/widget/my_grid_view.dart';
 import 'package:general_list/widget/my_list_view.dart';
-import 'package:general_list/widget/my_search_bar.dart';
 import 'package:general_list/widget/sort_button.dart';
+
 
 class GeneralList<T> extends StatelessWidget {
   const GeneralList({
@@ -25,8 +27,11 @@ class GeneralList<T> extends StatelessWidget {
     this.order, //order
     this.orderChoices, 
 
-    this.searchFunction, // search
-    this.searchThreshold = 0.7
+    // this.searchFunction, // search
+    // this.searchThreshold = 0.7
+
+    this.headerBuilder,
+    this.noItemsFoundWidget,
   });
 
 
@@ -49,8 +54,14 @@ class GeneralList<T> extends StatelessWidget {
   final List<LabelOrder<T>>? orderChoices;
 
 
-  final double Function(T item, String searchTerm) ? searchFunction;
-  final double searchThreshold;
+  // final double Function(T item, String searchTerm) ? searchFunction;
+  // final double searchThreshold;
+
+  /// This Function is used for building a header for the list (resume infor intended)
+  final Widget Function(List<T> items) ? headerBuilder;
+
+  /// This widget is shown when there is no elements to show
+  final Widget ? noItemsFoundWidget;
 
 
   @override
@@ -67,20 +78,32 @@ class GeneralList<T> extends StatelessWidget {
         color: Theme.of(context).colorScheme.surfaceContainer,
         child: Column(
           children: [
+            if(headerBuilder != null)
+            Header(headerBuilder: headerBuilder!),
+
             // if (searchFunction != null)
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: MySearchBar<T>(),
-            ),
+            // Padding(
+            //   padding: const EdgeInsets.all(8.0),
+            //   child: MySearchBar<T>(),
+            // ),
+
             (MediaQuery.of(context).size.width < 600)
             ? filterBarOnDiferentLine(context)
             : filterBarOnSameLine(context),
+            
 
-            Expanded(
-              child: (viewAsList)
-                    ? MyListView(itemBuilder: itemBuilder)
-                    : MyGridView(itemBuilder: itemBuilder, gridDelegate: gridDelegate!)
+            BlocBuilder<ListBloc<T>, ListState<T>>(
+              builder: (context, state){
+                return Expanded(
+                  child: (noItemsFoundWidget != null && state.items.isEmpty)
+                        ? noItemsFoundWidget!
+                        :(viewAsList)
+                          ? MyListView(itemBuilder: itemBuilder)
+                          : MyGridView(itemBuilder: itemBuilder, gridDelegate: gridDelegate!)
+                );
+              }
             ),
+            
           ],
         ),
       ),
