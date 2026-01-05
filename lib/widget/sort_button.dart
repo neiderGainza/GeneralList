@@ -48,10 +48,6 @@ class SortButton<T> extends StatelessWidget {
                 hint: Text("Order"),
                 alignment: Alignment.centerRight,
               ),
-              Padding(
-                padding: const EdgeInsets.fromLTRB(8, 0, 8, 0),
-                child: Container(width: 2, height: 24,color: Colors.black,),
-              ),
               IconButton(
                 onPressed: (){
                   context.read<ListBloc<T>>().add(
