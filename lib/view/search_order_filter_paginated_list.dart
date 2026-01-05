@@ -9,6 +9,7 @@ import 'package:general_list/widget/filter_button.dart';
 import 'package:general_list/widget/header.dart';
 import 'package:general_list/widget/my_grid_view.dart';
 import 'package:general_list/widget/my_list_view.dart';
+import 'package:general_list/widget/my_search_bar.dart';
 import 'package:general_list/widget/sort_button.dart';
 
 
@@ -27,8 +28,7 @@ class GeneralList<T> extends StatelessWidget {
     this.order, //order
     this.orderChoices, 
 
-    // this.searchFunction, // search
-    // this.searchThreshold = 0.7
+    this.searchFunction, // search
 
     this.headerBuilder,
     this.noItemsFoundWidget,
@@ -54,8 +54,8 @@ class GeneralList<T> extends StatelessWidget {
   final List<LabelOrder<T>>? orderChoices;
 
 
-  // final double Function(T item, String searchTerm) ? searchFunction;
-  // final double searchThreshold;
+  final bool Function(T item, String searchTerm) ? searchFunction;
+
 
   /// This Function is used for building a header for the list (resume infor intended)
   final Widget Function(List<T> items) ? headerBuilder;
@@ -71,7 +71,8 @@ class GeneralList<T> extends StatelessWidget {
       create: (context) => ListBloc<T>(
         getItemsStream: getItems,
         actualFilters: [],
-        actualOrder: orderChoices?[0]
+        actualOrder: orderChoices?[0],
+        searchFunction: searchFunction
       ),
 
       child: Container(
@@ -81,11 +82,11 @@ class GeneralList<T> extends StatelessWidget {
             if(headerBuilder != null)
             Header(headerBuilder: headerBuilder!),
 
-            // if (searchFunction != null)
-            // Padding(
-            //   padding: const EdgeInsets.all(8.0),
-            //   child: MySearchBar<T>(),
-            // ),
+            if (searchFunction != null)
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: MySearchBar<T>(),
+            ),
 
             (MediaQuery.of(context).size.width < 600)
             ? filterBarOnDiferentLine(context)

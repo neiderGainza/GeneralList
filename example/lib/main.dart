@@ -64,11 +64,11 @@ class MyList extends StatelessWidget{
       ],
 
       filterWidgets: [
-        MultipleSelectionFilterWidget(
+        SingleSelectionFilterWidget(
           choices: [
             (filter: (int a) async => a%2 == 0    , label: "Pares"),
             (filter: (int a) async => a%2 == 1    , label: "Impares"),
-            (filter: (int a) async => primeTest(a), label: "Primos")
+            // (filter: (int a) async => primeTest(a), label: "Primos")
           ], 
           title: "Hola"
         )
@@ -89,7 +89,12 @@ class MyList extends StatelessWidget{
           ),
         );
       },
-      // searchFunction: null,
+      searchFunction: (int item, String searchTerm){
+        if(item.toString().contains(searchTerm.trim())){
+          return true;
+        }
+        return false;
+      },
     );
   }
 }

@@ -7,12 +7,14 @@ import 'package:general_list/view_model/list_state.dart';
 class ListBloc<T> extends Bloc<ListEvent<T>, ListState<T>>{
   
   final Stream< List<T> > Function() getItemsStream;
+  final bool Function(T item, String searchTerm) ? searchFunction;
   late List<T> allItems;
 
   ListBloc({
     required this.getItemsStream,
     required List<LabelFilter<T>> actualFilters,
-    required LabelOrder<T> ? actualOrder
+    required LabelOrder<T> ? actualOrder,
+    this.searchFunction
   }):
   super(
     ListState<T>(
@@ -57,8 +59,25 @@ class ListBloc<T> extends Bloc<ListEvent<T>, ListState<T>>{
   }
 
 
-  void onSearchTermChangedEvent(SearchTermChangedEvent<T> event, Emitter emit){
-    print(event.searchTerm);
+  void onSearchTermChangedEvent(SearchTermChangedEvent<T> event, Emitter emit) async {
+    assert(searchFunction != null);
+    final itemList = await _updateFilterOrder(
+                          allItems, 
+                          filters     : state.filters, 
+                          order       : state.order,
+                          inverseOrder: state.inverseOrder
+    );
+
+
+    emit(
+      state.copyWith(
+        searchTerm: event.searchTerm,
+
+        items: itemList.where(
+          (item) => searchFunction!(item, event.searchTerm)
+        ).toList(),
+      ),
+    );
   }
 
 

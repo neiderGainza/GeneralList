@@ -82,9 +82,9 @@ class _SingleSelectionCheckBoxListState<T> extends State<SingleSelectionCheckBox
     return RadioGroup<int>(
       groupValue: selected,
 
-      onChanged: (value) {
-        if(selected != null) widget.removeFilter(context, widget.choices[selected!]);
-        if(value    != null) widget.addFilter(context, widget.choices[value]);
+      onChanged: (value) async {
+        if(selected != null) await widget.removeFilter(context, widget.choices[selected!]);
+        if(value    != null) await widget.addFilter(context, widget.choices[value]);
 
         selected = value;
         setState(() {});
